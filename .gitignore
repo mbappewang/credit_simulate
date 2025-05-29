@@ -37,3 +37,8 @@ htmlcov/
 .vscode/
 *.swp
 *.swo
+
+# Log files
+*.log
+log/
+logs/

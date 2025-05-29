@@ -15,6 +15,7 @@
   - 玩家
 - 多进程并行计算
 - 灵活的参数配置
+- 完整日志记录
 - Excel 格式的结果输出
 
 ## 环境要求
@@ -85,8 +86,15 @@ python main.py
 - `single_bet.py`: 实现各种游戏类型的单次投注逻辑
 - `single_player_bet.py`: 实现单个玩家的投注模拟
 - `multi_palyer_bet.py`: 实现多玩家并行投注模拟
+- `logger.py`: 日志系统配置和管理
 - `slots.csv`: 老虎机游戏赔率配置文件
 - `requirements.txt`: 项目依赖列表
+- `simulation.log`: 运行时日志文件
+
+### 输出文件
+
+- `*results.xlsx`: 模拟结果(带时间戳)
+- `simulation.log`: 运行日志
 
 ## 注意事项
 
@@ -94,3 +102,5 @@ python main.py
 2. 建议在使用较大参数前，先用小规模参数测试
 3. 结果文件会自动以时间戳命名，避免覆盖之前的结果
 4. 可以通过调整 `multi_palyer_bet.py` 中的 `pool_size` 来控制并发数
+5. 日志文件 `simulation.log` 会在达到 10MB 时自动轮转，保留最近 5 个备份
+6. 日志同时输出到控制台和文件，方便实时查看进度
