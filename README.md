@@ -19,7 +19,7 @@
 
 ## 环境要求
 
-- Python 3.8+
+- Python 3.10+
 - 依赖包:
   - numpy==2.2.6
   - openpyxl==3.1.5
