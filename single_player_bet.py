@@ -44,6 +44,14 @@ def single_player(relation,odds_list):
                 # 余额不足降低投注额
                 if balance < single_bet_amount:
                     single_bet_amount = balance * 0.1
+                # 如果余额小于默认投注额且大于等于单次投注额，则不改变单次投注额
+                elif balance < default_single_bet_amount and balance >= single_bet_amount:
+                    pass
+                # 否则，使用默认单次投注额
+                else:    
+                    single_bet_amount = default_single_bet_amount
+                if balance <= initial_balance * 0.01:
+                    break  # 如果余额小于初始余额的1%，则退出循环
                 # 用户投注金额累加
                 wager += single_bet_amount
                 # 用户有效流水增加
@@ -62,6 +70,14 @@ def single_player(relation,odds_list):
                 # 余额不足降低投注额
                 if balance < single_bet_amount:
                     single_bet_amount = balance * 0.1
+                # 如果余额小于默认投注额且大于等于单次投注额，则不改变单次投注额
+                elif balance < default_single_bet_amount and balance >= single_bet_amount:
+                    pass
+                # 否则，使用默认单次投注额
+                else:    
+                    single_bet_amount = default_single_bet_amount
+                if balance <= initial_balance * 0.01:
+                    break  # 如果余额小于初始余额的1%，则退出循环
                 # 用户投注金额累加
                 wager += single_bet_amount
                 # 用户有效流水增加
@@ -69,7 +85,7 @@ def single_player(relation,odds_list):
                 # 用户余额减少
                 balance -= single_bet_amount
                 # 单次返奖金额
-                single_payout = slots_odds(odds_list) * single_bet_amount
+                single_payout = original() * single_bet_amount
                 # 返奖金额累加
                 payout += single_payout
                 # 用户余额增加
@@ -80,6 +96,14 @@ def single_player(relation,odds_list):
                 # 余额不足降低投注额
                 if balance < single_bet_amount:
                     single_bet_amount = balance * 0.1
+                # 如果余额小于默认投注额且大于等于单次投注额，则不改变单次投注额
+                elif balance < default_single_bet_amount and balance >= single_bet_amount:
+                    pass
+                # 否则，使用默认单次投注额
+                else:    
+                    single_bet_amount = default_single_bet_amount
+                if balance <= initial_balance * 0.01:
+                    break  # 如果余额小于初始余额的1%，则退出循环
                 # 用户投注金额累加
                 wager += single_bet_amount
                 # 用户有效流水增加
@@ -87,7 +111,7 @@ def single_player(relation,odds_list):
                 # 用户余额减少
                 balance -= single_bet_amount
                 # 单次返奖金额
-                single_payout = slots_odds(odds_list) * single_bet_amount
+                single_payout = baccarat() * single_bet_amount
                 # 返奖金额累加
                 payout += single_payout
                 # 用户余额增加
