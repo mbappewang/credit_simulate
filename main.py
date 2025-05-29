@@ -1,7 +1,6 @@
 # 导入常用库
 import pandas as pd
 from datetime import datetime
-from single_player_bet import single_player
 from multi_palyer_bet import multi_player
 from group import create_group_master_sub_player_relation
 

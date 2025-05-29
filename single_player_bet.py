@@ -104,5 +104,5 @@ def single_player(relation):
         'wager_valid': wager_valid,
         'payout': payout,
     }
-    print(f"组 {group_id} 总代 {master_id} 子代 {sub_id} 玩家 {player_id}")
+    print(f"玩法 {game_type} 组 {group_id} 总代 {master_id} 子代 {sub_id} 玩家 {player_id}")
     return result  # 返回投注结果
