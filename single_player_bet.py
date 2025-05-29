@@ -1,5 +1,5 @@
 from single_bet import slots_odds, baccarat, original
-from single_player_bet import logger
+from logger import logger
 
 def single_player(relation):
     """
