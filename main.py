@@ -207,7 +207,7 @@ if __name__ == '__main__':
     },
     ]
     # 创建组-总代-子代-玩家关系
-    relations = create_group_master_sub_player_relation(task_dict[0])
+    relations = create_group_master_sub_player_relation(task_dict)
     # 执行多玩家模拟
     results = multi_player(relations)
     # 将结果转换为DataFrame并保存为Excel文件
