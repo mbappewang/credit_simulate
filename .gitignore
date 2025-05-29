@@ -1,0 +1,39 @@
+# Virtual Environment
+venv/
+env/
+.venv/
+.env/
+ENV/
+virtualenv/
+.Python
+bin/
+lib/
+lib64/
+include/
+share/
+pyvenv.cfg
+
+# Excel files
+*.xls
+*.xlsx
+*.xlsm
+*.xlsb
+*.xlt
+*.xltm
+*.xltx
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE directories
+.idea/
+.vscode/
+*.swp
+*.swo
