@@ -13,8 +13,8 @@ def get_odds(file_name):
 
 # 从get_odds函数获得oddslist,返回老虎机的单次spin赔率
 
-def slots_odds():
-    odds_list = get_odds('slots.csv')
+def slots_odds(odds_list):
+    # odds_list = get_odds('slots.csv')
     # 随机抽取一个赔率作为单次老虎机spin的赔率
     odds = secrets.choice(odds_list)
     return odds

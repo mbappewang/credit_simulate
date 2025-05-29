@@ -3,6 +3,7 @@ import pandas as pd
 from datetime import datetime
 from multi_palyer_bet import multi_player
 from group import create_group_master_sub_player_relation
+from single_bet import get_odds
 
 # 模拟任务
 if __name__ == '__main__':
@@ -206,11 +207,24 @@ if __name__ == '__main__':
         "withdraw_rate": 3,
     },
     ]
+    # 从CSV文件中获取老虎机赔率列表
+    odds_list = get_odds('slots.csv')
     # 创建组-总代-子代-玩家关系
     relations = create_group_master_sub_player_relation(task_dict)
     # 执行多玩家模拟
-    results = multi_player(relations)
+    results = multi_player(relations,odds_list)
     # 将结果转换为DataFrame并保存为Excel文件
     df = pd.DataFrame(results)
+    # 创建一个 Excel 写入器
     current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S ')
-    df.to_excel(f'{current_time}results.xlsx', index=False)
+    excel_writer = pd.ExcelWriter(f'{current_time}results.xlsx', engine='openpyxl')
+    # 按照指定字段分组
+    grouped = df.groupby(['game_type', 'single_bet_amount'])
+    # 遍历每个分组，将数据写入不同的sheet
+    for (game_type, bet_amount), group_data in grouped:
+        # 创建sheet名称
+        sheet_name = f'{game_type}_{bet_amount}'
+        # 将分组数据写入相应的sheet
+        group_data.to_excel(excel_writer, sheet_name=sheet_name, index=False)
+    # 保存并关闭Excel文件
+    excel_writer.close()

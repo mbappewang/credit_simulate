@@ -1,7 +1,7 @@
 from single_bet import slots_odds, baccarat, original
 from logger import logger
 
-def single_player(relation):
+def single_player(relation,odds_list):
     """
     模拟单个玩家的投注
     :param relation: 玩家关系字典
@@ -22,6 +22,7 @@ def single_player(relation):
     # 玩家初始余额
     initial_balance = relation['up_point']
     # 单次投注金额
+    default_single_bet_amount = relation['single_bet']
     single_bet_amount = relation['single_bet']
     # 止盈目标余额
     withdraw_balance = relation['withdraw_rate']* initial_balance
@@ -50,7 +51,7 @@ def single_player(relation):
                 # 用户余额减少
                 balance -= single_bet_amount
                 # 单次返奖金额
-                single_payout = slots_odds() * single_bet_amount
+                single_payout = slots_odds(odds_list) * single_bet_amount
                 # 返奖金额累加
                 payout += single_payout
                 # 用户余额增加
@@ -68,7 +69,7 @@ def single_player(relation):
                 # 用户余额减少
                 balance -= single_bet_amount
                 # 单次返奖金额
-                single_payout = slots_odds() * single_bet_amount
+                single_payout = slots_odds(odds_list) * single_bet_amount
                 # 返奖金额累加
                 payout += single_payout
                 # 用户余额增加
@@ -86,7 +87,7 @@ def single_player(relation):
                 # 用户余额减少
                 balance -= single_bet_amount
                 # 单次返奖金额
-                single_payout = slots_odds() * single_bet_amount
+                single_payout = slots_odds(odds_list) * single_bet_amount
                 # 返奖金额累加
                 payout += single_payout
                 # 用户余额增加
@@ -99,6 +100,7 @@ def single_player(relation):
         'master_id': master_id,
         'sub_id': sub_id,
         'game_type': game_type,
+        'single_bet_amount': default_single_bet_amount,
         'up_point': initial_balance,
         'final_balance': balance,
         'wager': wager,

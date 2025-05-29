@@ -40,5 +40,7 @@ htmlcov/
 
 # Log files
 *.log
+*.log.*
+simulation.log*
 log/
 logs/
