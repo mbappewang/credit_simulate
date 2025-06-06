@@ -26,6 +26,7 @@ excel/
 # CSV files and directory
 csv/
 *.csv
+slots.csv
 
 # Python cache files
 __pycache__/
