@@ -22,7 +22,8 @@ def single_player(date,weekday,relation,odds_list):
     # 玩家初始余额
     initial_balance = relation['up_point'] + relation['bonus']
     # 单次投注金额
-    default_single_bet_amount = relation['single_bet']
+    default_single_bet_amount = relation['default_single_bet_amount']
+    current_single_bet_amount = relation['single_bet']
     single_bet_amount = relation['single_bet']
     # 止盈目标余额
     withdraw_balance = relation['withdraw_rate']* initial_balance
@@ -45,11 +46,11 @@ def single_player(date,weekday,relation,odds_list):
                 if balance < single_bet_amount:
                     single_bet_amount = balance * 0.1
                 # 如果余额小于默认投注额且大于等于单次投注额，则不改变单次投注额
-                elif balance < default_single_bet_amount and balance >= single_bet_amount:
+                elif balance < current_single_bet_amount and balance >= single_bet_amount:
                     pass
                 # 否则，使用默认单次投注额
                 else:    
-                    single_bet_amount = default_single_bet_amount
+                    single_bet_amount = current_single_bet_amount
                 if balance <= initial_balance * 0.01:
                     break  # 如果余额小于初始余额的1%，则退出循环
                 # 用户投注金额累加
@@ -71,11 +72,11 @@ def single_player(date,weekday,relation,odds_list):
                 if balance < single_bet_amount:
                     single_bet_amount = balance * 0.1
                 # 如果余额小于默认投注额且大于等于单次投注额，则不改变单次投注额
-                elif balance < default_single_bet_amount and balance >= single_bet_amount:
+                elif balance < current_single_bet_amount and balance >= single_bet_amount:
                     pass
                 # 否则，使用默认单次投注额
                 else:    
-                    single_bet_amount = default_single_bet_amount
+                    single_bet_amount = current_single_bet_amount
                 if balance <= initial_balance * 0.01:
                     break  # 如果余额小于初始余额的1%，则退出循环
                 # 用户投注金额累加
@@ -97,11 +98,11 @@ def single_player(date,weekday,relation,odds_list):
                 if balance < single_bet_amount:
                     single_bet_amount = balance * 0.1
                 # 如果余额小于默认投注额且大于等于单次投注额，则不改变单次投注额
-                elif balance < default_single_bet_amount and balance >= single_bet_amount:
+                elif balance < current_single_bet_amount and balance >= single_bet_amount:
                     pass
                 # 否则，使用默认单次投注额
                 else:    
-                    single_bet_amount = default_single_bet_amount
+                    single_bet_amount = current_single_bet_amount
                 if balance <= initial_balance * 0.01:
                     break  # 如果余额小于初始余额的1%，则退出循环
                 # 用户投注金额累加
@@ -126,8 +127,9 @@ def single_player(date,weekday,relation,odds_list):
         'master_id': master_id,
         'sub_id': sub_id,
         'game_type': game_type,
-        'single_bet_amount': default_single_bet_amount,
-        'up_point': initial_balance,
+        'default_single_bet_amount': default_single_bet_amount,
+        'single_bet': current_single_bet_amount,
+        'up_point': relation['up_point'],
         'final_balance': balance,
         'wager': wager,
         'wager_valid': wager_valid,

@@ -132,7 +132,7 @@ if __name__ == '__main__':
                 logger.info(f"创建csv文件夹: {csv_dir}")
             
             # 分组处理
-            grouped = df.groupby(['game_type', 'single_bet_amount'])
+            grouped = df.groupby(['game_type', 'default_single_bet_amount'])
             group_count = len(grouped)
             logger.info(f"数据分组完成, 共{group_count}个分组")
             
