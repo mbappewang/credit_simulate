@@ -40,8 +40,8 @@ def single_player(date,weekday,relation,odds_list):
     # 模拟投注结果
     match game_type:
         case 'slots':
-            # 当用户【余额大于初始余额1%】且【余额小于止盈金额】时，进行模拟
-            while balance > initial_balance * 0.01 and balance < withdraw_balance:
+            # 当用户【余额大于初始余额1%】且【余额小于止盈金额】且【流水小于等于一倍流水】时，进行模拟
+            while balance == 0 or ( balance >= withdraw_balance and wager >= initial_balance):
                 # 余额不足降低投注额
                 if balance < single_bet_amount:
                     single_bet_amount = balance * 0.1
@@ -52,6 +52,8 @@ def single_player(date,weekday,relation,odds_list):
                 else:    
                     single_bet_amount = current_single_bet_amount
                 if balance <= initial_balance * 0.01:
+                    wager += balance
+                    balance = 0
                     break  # 如果余额小于初始余额的1%，则退出循环
                 # 用户投注金额累加
                 wager += single_bet_amount
@@ -67,7 +69,7 @@ def single_player(date,weekday,relation,odds_list):
                 balance += single_payout
         case 'original':
             # 当用户【余额小于初始余额1%】且【余额小于止盈金额】时，进行模拟
-            while balance > initial_balance * 0.01 and balance < withdraw_balance:
+            while balance == 0 or ( balance >= withdraw_balance and wager >= initial_balance):
                 # 余额不足降低投注额
                 if balance < single_bet_amount:
                     single_bet_amount = balance * 0.1
@@ -78,6 +80,8 @@ def single_player(date,weekday,relation,odds_list):
                 else:    
                     single_bet_amount = current_single_bet_amount
                 if balance <= initial_balance * 0.01:
+                    wager += balance
+                    balance = 0
                     break  # 如果余额小于初始余额的1%，则退出循环
                 # 用户投注金额累加
                 wager += single_bet_amount
@@ -93,7 +97,7 @@ def single_player(date,weekday,relation,odds_list):
                 balance += single_payout
         case 'baccarat':
             # 当用户【余额小于初始余额1%】且【余额小于止盈金额】时，进行模拟
-            while balance > initial_balance * 0.01 and balance < withdraw_balance:
+            while balance == 0 or ( balance >= withdraw_balance and wager >= initial_balance):
                 # 余额不足降低投注额
                 if balance < single_bet_amount:
                     single_bet_amount = balance * 0.1
@@ -104,6 +108,8 @@ def single_player(date,weekday,relation,odds_list):
                 else:    
                     single_bet_amount = current_single_bet_amount
                 if balance <= initial_balance * 0.01:
+                    wager += balance
+                    balance = 0
                     break  # 如果余额小于初始余额的1%，则退出循环
                 # 用户投注金额累加
                 wager += single_bet_amount
@@ -120,8 +126,6 @@ def single_player(date,weekday,relation,odds_list):
 
     if balance > withdraw_balance:
         balance = balance - relation['bonus']
-    else:
-        balance = 0
 
     result = {
         'date': date,

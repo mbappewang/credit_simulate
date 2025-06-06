@@ -1,3 +1,4 @@
+game_type,group_count,matser_count,sub_count,master_player_count,sub_player_count,master_up_point,sub_up_point,default_single_bet_amount,single_bet,withdraw_rate,bonus,cashback_rate
 baccarat,1,5,2,20000,10000,5000,2500,250,250,1.2,0,0.05
 baccarat,1,5,2,20000,10000,2500,1500,500,500,1.2,0,0.05
 baccarat,1,5,2,20000,10000,5000,2500,250,250,1.5,0,0.05
