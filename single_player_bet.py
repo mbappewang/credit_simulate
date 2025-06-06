@@ -40,8 +40,8 @@ def single_player(date,weekday,relation,odds_list):
     # 模拟投注结果
     match game_type:
         case 'slots':
-            # 当用户【余额大于初始余额1%】且【余额小于止盈金额】且【流水小于等于一倍流水】时，进行模拟
-            while balance == 0 or ( balance >= withdraw_balance and wager >= initial_balance):
+            # 当用户余额大于0，且（未达到止盈金额或未完成有效流水）时，继续投注
+            while balance > 0 and (balance < withdraw_balance or wager < initial_balance):
                 # 余额不足降低投注额
                 if balance < single_bet_amount:
                     single_bet_amount = balance * 0.1
@@ -68,8 +68,8 @@ def single_player(date,weekday,relation,odds_list):
                 # 用户余额增加
                 balance += single_payout
         case 'original':
-            # 当用户【余额小于初始余额1%】且【余额小于止盈金额】时，进行模拟
-            while balance == 0 or ( balance >= withdraw_balance and wager >= initial_balance):
+            # 当用户余额大于0，且（未达到止盈金额或未完成有效流水）时，继续投注
+            while balance > 0 and (balance < withdraw_balance or wager < initial_balance):
                 # 余额不足降低投注额
                 if balance < single_bet_amount:
                     single_bet_amount = balance * 0.1
@@ -96,8 +96,8 @@ def single_player(date,weekday,relation,odds_list):
                 # 用户余额增加
                 balance += single_payout
         case 'baccarat':
-            # 当用户【余额小于初始余额1%】且【余额小于止盈金额】时，进行模拟
-            while balance == 0 or ( balance >= withdraw_balance and wager >= initial_balance):
+            # 当用户余额大于0，且（未达到止盈金额或未完成有效流水）时，继续投注
+            while balance > 0 and (balance < withdraw_balance or wager < initial_balance):
                 # 余额不足降低投注额
                 if balance < single_bet_amount:
                     single_bet_amount = balance * 0.1

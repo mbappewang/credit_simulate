@@ -8,7 +8,7 @@ import time
 
 def multi_player(date, weekday, relations, odds_list):
     start_time = time.time()
-    pool_size = multiprocessing.cpu_count()+2
+    pool_size = multiprocessing.cpu_count()
     logger.info(f"创建进程池，大小: {pool_size}")
     
     with multiprocessing.Pool(processes=pool_size) as pool:
