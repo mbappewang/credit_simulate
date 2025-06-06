@@ -1,230 +1,135 @@
 # 导入常用库
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 from multi_palyer_bet import multi_player
 from group import create_group_master_sub_player_relation
+from date import generate_dates_with_weekdays
 from single_bet import get_odds
+import os
+from logger import logger
+from second_day_change import change_task
 
 # 模拟任务
 if __name__ == '__main__':
-    task_dict = [
-        {
-        # 游戏类型
-        "game_type": 'slots',
-        # 每次模拟组数
-        "group_count": 10,
-        # 每组中的总代数量
-        "matser_count": 5,
-        # 每组中的子代数量
-        "sub_count": 10,
-        # 每组中的总代的玩家数量
-        "master_player_count": 100,
-        # 每组中的子代的玩家数量
-        "sub_player_count": 50,
-        # 每个总代的玩家的上分金额
-        "master_up_point": 1000,
-        # 每个子代的玩家的上分金额
-        "sub_up_point": 500,
-        # 每个玩家的单次投注金额
-        "single_bet": 50,
-        # 每个玩家的止盈倍数
-        "withdraw_rate": 3,
-    },
-    {
-        # 游戏类型
-        "game_type": 'slots',
-        # 每次模拟组数
-        "group_count": 10,
-        # 每组中的总代数量
-        "matser_count": 5,
-        # 每组中的子代数量
-        "sub_count": 10,
-        # 每组中的总代的玩家数量
-        "master_player_count": 100,
-        # 每组中的子代的玩家数量
-        "sub_player_count": 50,
-        # 每个总代的玩家的上分金额
-        "master_up_point": 1000,
-        # 每个子代的玩家的上分金额
-        "sub_up_point": 500,
-        # 每个玩家的单次投注金额
-        "single_bet": 25,
-        # 每个玩家的止盈倍数
-        "withdraw_rate": 3,
-    },
-    {
-        # 游戏类型
-        "game_type": 'slots',
-        # 每次模拟组数
-        "group_count": 10,
-        # 每组中的总代数量
-        "matser_count": 5,
-        # 每组中的子代数量
-        "sub_count": 10,
-        # 每组中的总代的玩家数量
-        "master_player_count": 100,
-        # 每组中的子代的玩家数量
-        "sub_player_count": 50,
-        # 每个总代的玩家的上分金额
-        "master_up_point": 1000,
-        # 每个子代的玩家的上分金额
-        "sub_up_point": 500,
-        # 每个玩家的单次投注金额
-        "single_bet": 10,
-        # 每个玩家的止盈倍数
-        "withdraw_rate": 3,
-    },
-    {
-        # 游戏类型
-        "game_type": 'original',
-        # 每次模拟组数
-        "group_count": 10,
-        # 每组中的总代数量
-        "matser_count": 5,
-        # 每组中的子代数量
-        "sub_count": 10,
-        # 每组中的总代的玩家数量
-        "master_player_count": 100,
-        # 每组中的子代的玩家数量
-        "sub_player_count": 50,
-        # 每个总代的玩家的上分金额
-        "master_up_point": 1000,
-        # 每个子代的玩家的上分金额
-        "sub_up_point": 500,
-        # 每个玩家的单次投注金额
-        "single_bet": 50,
-        # 每个玩家的止盈倍数
-        "withdraw_rate": 3,
-    },
-    {
-        # 游戏类型
-        "game_type": 'original',
-        # 每次模拟组数
-        "group_count": 10,
-        # 每组中的总代数量
-        "matser_count": 5,
-        # 每组中的子代数量
-        "sub_count": 10,
-        # 每组中的总代的玩家数量
-        "master_player_count": 100,
-        # 每组中的子代的玩家数量
-        "sub_player_count": 50,
-        # 每个总代的玩家的上分金额
-        "master_up_point": 1000,
-        # 每个子代的玩家的上分金额
-        "sub_up_point": 500,
-        # 每个玩家的单次投注金额
-        "single_bet": 25,
-        # 每个玩家的止盈倍数
-        "withdraw_rate": 3,
-    },
-    {
-        # 游戏类型
-        "game_type": 'original',
-        # 每次模拟组数
-        "group_count": 10,
-        # 每组中的总代数量
-        "matser_count": 5,
-        # 每组中的子代数量
-        "sub_count": 10,
-        # 每组中的总代的玩家数量
-        "master_player_count": 100,
-        # 每组中的子代的玩家数量
-        "sub_player_count": 50,
-        # 每个总代的玩家的上分金额
-        "master_up_point": 1000,
-        # 每个子代的玩家的上分金额
-        "sub_up_point": 500,
-        # 每个玩家的单次投注金额
-        "single_bet": 10,
-        # 每个玩家的止盈倍数
-        "withdraw_rate": 3,
-    },
-    {
-        # 游戏类型
-        "game_type": 'baccarat',
-        # 每次模拟组数
-        "group_count": 10,
-        # 每组中的总代数量
-        "matser_count": 5,
-        # 每组中的子代数量
-        "sub_count": 10,
-        # 每组中的总代的玩家数量
-        "master_player_count": 100,
-        # 每组中的子代的玩家数量
-        "sub_player_count": 50,
-        # 每个总代的玩家的上分金额
-        "master_up_point": 2000,
-        # 每个子代的玩家的上分金额
-        "sub_up_point": 1000,
-        # 每个玩家的单次投注金额
-        "single_bet": 250,
-        # 每个玩家的止盈倍数
-        "withdraw_rate": 3,
-    },
-    {
-        # 游戏类型
-        "game_type": 'baccarat',
-        # 每次模拟组数
-        "group_count": 10,
-        # 每组中的总代数量
-        "matser_count": 5,
-        # 每组中的子代数量
-        "sub_count": 10,
-        # 每组中的总代的玩家数量
-        "master_player_count": 100,
-        # 每组中的子代的玩家数量
-        "sub_player_count": 50,
-        # 每个总代的玩家的上分金额
-        "master_up_point": 2000,
-        # 每个子代的玩家的上分金额
-        "sub_up_point": 1000,
-        # 每个玩家的单次投注金额
-        "single_bet": 100,
-        # 每个玩家的止盈倍数
-        "withdraw_rate": 3,
-    },
-    {
-        # 游戏类型
-        "game_type": 'baccarat',
-        # 每次模拟组数
-        "group_count": 10,
-        # 每组中的总代数量
-        "matser_count": 5,
-        # 每组中的子代数量
-        "sub_count": 10,
-        # 每组中的总代的玩家数量
-        "master_player_count": 100,
-        # 每组中的子代的玩家数量
-        "sub_player_count": 50,
-        # 每个总代的玩家的上分金额
-        "master_up_point": 2000,
-        # 每个子代的玩家的上分金额
-        "sub_up_point": 1000,
-        # 每个玩家的单次投注金额
-        "single_bet": 50,
-        # 每个玩家的止盈倍数
-        "withdraw_rate": 3,
-    },
-    ]
-    # 从CSV文件中获取老虎机赔率列表
-    odds_list = get_odds('slots.csv')
-    # 创建组-总代-子代-玩家关系
-    relations = create_group_master_sub_player_relation(task_dict)
-    # 执行多玩家模拟
-    results = multi_player(relations,odds_list)
-    # 将结果转换为DataFrame并保存为Excel文件
-    df = pd.DataFrame(results)
-    # 创建一个 Excel 写入器
-    current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S ')
-    excel_writer = pd.ExcelWriter(f'{current_time}results.xlsx', engine='openpyxl')
-    # 按照指定字段分组
-    grouped = df.groupby(['game_type', 'single_bet_amount'])
-    # 遍历每个分组，将数据写入不同的sheet
-    for (game_type, bet_amount), group_data in grouped:
-        # 创建sheet名称
-        sheet_name = f'{game_type}_{bet_amount}'
-        # 将分组数据写入相应的sheet
-        group_data.to_excel(excel_writer, sheet_name=sheet_name, index=False)
-    # 保存并关闭Excel文件
-    excel_writer.close()
+    
+    logger.info(r"""
+                   _ooOoo_
+                  o8888888o
+                  88" . "88
+                  (| -_- |)
+                   O\ = /O
+                ____/`---'\____
+              .'  \\|     |//  `.
+             /  \\|||  :  |||//  \\
+            /  _||||| -:- |||||-  \\
+            |   | \\\  -  /// |   |
+            | \_|  ''\---/''  |   |
+            \  .-\__  `-`  ___/-. /
+          ___`. .'  /--.--\  `. . __
+       ."" '<  `.___\_<|>_/___.'  >'"".
+      | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+      \  \ `-.   \_ __\ /__ _/   .-` /  /
+ ======`-.____`-.___\_____/___.-`____.-'======
+""")
+    
+    try:
+        ''' 第一步 - 读取task.csv创建任务字典 '''
+        try:
+            # 读取CSV文件
+            task_df = pd.read_csv('task.csv')
+            # 将DataFrame转换为字典列表
+            task_dict = task_df.to_dict('records')
+            logger.info("成功读取任务配置文件")
+        except Exception as e:
+            logger.error(f"读取任务配置文件失败: {str(e)}")
+            raise
+        logger.info("=" * 50)
+        
+
+        ''' 第二步 - 从CSV文件中获取老虎机赔率列表 '''
+        try:
+            odds_list = get_odds('slots.csv')
+            logger.info("成功读取赔率配置")
+        except Exception as e:
+            logger.error(f"读取赔率配置失败: {str(e)}")
+            raise
+        logger.info("=" * 50)
+
+
+        ''' 第三步 - 创建玩家与代理的映射关系 '''
+        try:
+            relations = create_group_master_sub_player_relation(task_dict)
+            logger.info(f"成功创建{len(relations)}个玩家关系")
+        except Exception as e:
+            logger.error(f"创建玩家关系失败: {str(e)}")
+            raise
+        logger.info("=" * 50)
+
+
+        ''' 第四步 - 生成日期列表 '''
+        try:
+            dates_list = generate_dates_with_weekdays(2)
+            logger.info(f"成功生成{len(dates_list)}天的日期")
+        except Exception as e:
+            logger.error(f"生成日期列表失败: {str(e)}")
+            raise
+        logger.info("=" * 50)
+
+
+        ''' 第五步 - 多玩家投注 '''
+        results = []
+        try:
+            for date_info in dates_list:
+                date = date_info['date']
+                weekday = date_info['weekday']
+                result = multi_player(date, weekday, relations, odds_list)
+                results.extend(result)
+                logger.info(f"日期: {date}, 星期: {weekday} 的投注模拟完成")
+                new_relations = change_task(result)
+        except Exception as e:
+            logger.error(f"玩家投注模拟失败: {str(e)}")
+            raise
+        logger.info("=" * 50)
+
+
+        ''' 第六步 - 结果处理 '''
+        try:
+            logger.info("============== 开始处理结果 ==============")
+            
+            # 创建DataFrame
+            df = pd.DataFrame(results)
+            logger.info(f"成功创建DataFrame, 共{len(df)}条记录")
+            
+            # 创建csv文件夹
+            csv_dir = 'csv'
+            if not os.path.exists(csv_dir):
+                os.makedirs(csv_dir)
+                logger.info(f"创建csv文件夹: {csv_dir}")
+            
+            # 分组处理
+            grouped = df.groupby(['game_type', 'single_bet_amount'])
+            group_count = len(grouped)
+            logger.info(f"数据分组完成, 共{group_count}个分组")
+            
+            # 记录每个分组的基本信息并保存CSV
+            current_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+            for (game_type, bet_amount), group_data in grouped:
+                file_name = f'{game_type}_{bet_amount}_{current_time}.csv'
+                file_path = os.path.join(csv_dir, file_name)
+                
+                # 保存为CSV，使用utf-8编码
+                group_data.to_csv(file_path, index=False, encoding='utf-8')
+                logger.info(f"- 分组 {game_type}_{bet_amount}: {len(group_data)}条记录")
+                logger.info(f"  已保存到: {file_path}")
+            
+            logger.info("============== 结果处理完成 ==============")
+            
+        except Exception as e:
+            logger.error(f"保存结果失败: {str(e)}")
+            raise
+
+    except Exception as e:
+        logger.error(f"程序执行失败: {str(e)}")
+        raise
+    else:
+        logger.info("程序执行完成")

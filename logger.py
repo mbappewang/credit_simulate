@@ -1,29 +1,32 @@
-import logging
-from logging.handlers import RotatingFileHandler
+from loguru import logger
 import sys
+import os
 
-# 创建logger对象
-logger = logging.getLogger('simulation')
-logger.setLevel(logging.INFO)
+# 创建 logs 文件夹(如果不存在)
+logs_dir = 'logs'
+if not os.path.exists(logs_dir):
+    os.makedirs(logs_dir)
 
-# 创建文件处理器
-file_handler = RotatingFileHandler(
-    'simulation.log',
-    maxBytes=10*1024*1024,  # 10MB
-    backupCount=5,
-    encoding='utf-8'
+# 移除默认的控制台处理器
+logger.remove()
+
+# 添加控制台输出
+logger.add(
+    sys.stdout,
+    format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> - <level>{message}</level>",
+    level="INFO"
 )
-file_handler.setLevel(logging.INFO)
 
-# 创建控制台处理器
-console_handler = logging.StreamHandler(sys.stdout)
-console_handler.setLevel(logging.INFO)
+# 添加文件输出
+logger.add(
+    os.path.join(logs_dir, "simulation_{time}.log"),
+    rotation="10 MB",  # 每个文件最大10MB
+    retention="1 week",  # 保留1周的日志
+    compression="zip",  # 压缩旧日志
+    encoding="utf-8",
+    format="{time:YYYY-MM-DD HH:mm:ss} - {message}",
+    level="INFO"
+)
 
-# 设置日志格式
-formatter = logging.Formatter('%(asctime)s - %(message)s')
-file_handler.setFormatter(formatter)
-console_handler.setFormatter(formatter)
-
-# 添加处理器到logger
-logger.addHandler(file_handler)
-logger.addHandler(console_handler)
+# 导出 logger 对象供其他模块使用
+__all__ = ['logger']

@@ -13,7 +13,8 @@ include/
 share/
 pyvenv.cfg
 
-# Excel files
+# Excel files and directory
+excel/
 *.xls
 *.xlsx
 *.xlsm
@@ -21,6 +22,10 @@ pyvenv.cfg
 *.xlt
 *.xltm
 *.xltx
+
+# CSV files and directory
+csv/
+*.csv
 
 # Python cache files
 __pycache__/

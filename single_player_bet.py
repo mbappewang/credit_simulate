@@ -1,7 +1,7 @@
 from single_bet import slots_odds, baccarat, original
 from logger import logger
 
-def single_player(relation,odds_list):
+def single_player(date,weekday,relation,odds_list):
     """
     模拟单个玩家的投注
     :param relation: 玩家关系字典
@@ -118,6 +118,8 @@ def single_player(relation,odds_list):
                 balance += single_payout
 
     result = {
+        'date': date,
+        'weekday': weekday,
         'group_id': group_id,
         'player_id': player_id,
         'uper_identity': uper_identity,
@@ -130,6 +132,7 @@ def single_player(relation,odds_list):
         'wager': wager,
         'wager_valid': wager_valid,
         'payout': payout,
+        "bonus": relation['bonus']
     }
-    logger.info(f"玩法 {game_type} 组 {group_id} 总代 {master_id} 子代 {sub_id} 玩家 {player_id}")
+    # logger.info(f"日期{date} {weekday}  玩法 {game_type} 组 {group_id} 总代 {master_id} 子代 {sub_id} 玩家 {player_id} ")
     return result  # 返回投注结果
