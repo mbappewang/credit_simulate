@@ -68,7 +68,7 @@ if __name__ == '__main__':
 
         ''' 第四步 - 生成日期列表 '''
         try:
-            dates_list = generate_dates_with_weekdays(7)
+            dates_list = generate_dates_with_weekdays(30) # 生成N天的日期列表
             logger.info(f"成功生成{len(dates_list)}天的日期")
         except Exception as e:
             logger.error(f"生成日期列表失败: {str(e)}")
@@ -105,9 +105,9 @@ if __name__ == '__main__':
             
             # 定义数值类型列
             numeric_columns = [
-                'group_id', 'player_id', 'uper_identity', 'master_id', 'sub_id',
-                'single_bet_amount', 'up_point', 'final_balance', 'wager',
-                'wager_valid', 'payout', 'bonus', 'withdraw_rate'
+                'cashback_rate','group_id', 'player_id', 'uper_identity', 'master_id', 'sub_id',
+                'single_bet_amount','default_single_bet_amount', 'up_point','default_up_point', 'final_balance', 
+                'wager','wager_valid', 'payout', 'bonus', 'withdraw_rate'
             ]
             
             # 创建DataFrame
@@ -132,26 +132,96 @@ if __name__ == '__main__':
                 logger.info(f"创建csv文件夹: {csv_dir}")
             
             # 分组处理
-            grouped = df.groupby(['game_type', 'default_single_bet_amount'])
+            grouped = df.groupby(['withdraw_rate','cashback_rate', 'game_type', 'default_up_point' ,'default_single_bet_amount'])
             group_count = len(grouped)
             logger.info(f"数据分组完成, 共{group_count}个分组")
             
             # 记录每个分组的基本信息并保存CSV
             current_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-            for (game_type, bet_amount), group_data in grouped:
-                file_name = f'{game_type}_{bet_amount}_{current_time}.csv'
-                file_path = os.path.join(csv_dir, file_name)
+            all_summary_data = []  # 用于存储所有汇总数据
+            
+            for (withdraw_rate,cashback_rate, game_type, default_up_point, bet_amount), group_data in grouped:
+                # 按日期和master_id分组并计算汇总数据
+                summary_data = group_data.groupby(['withdraw_rate','cashback_rate','game_type','date','group_id']).agg({
+                    'player_id': 'count',
+                    'default_up_point': 'first',
+                    'default_single_bet_amount': 'first',
+                    'up_point': 'sum',
+                    'final_balance': 'sum',
+                    'wager': 'sum',
+                    'payout': 'sum',
+                    'bonus': 'sum'
+                }).reset_index()
                 
-                # 保存为CSV时指定数值格式
+                # 添加分组信息
+                summary_data['game_type'] = game_type
+                summary_data['default_up_point'] = default_up_point
+                summary_data['default_single_bet_amount'] = bet_amount
+                
+                # 计算新的指标
+                summary_data['bet_percent'] = (
+                    summary_data['default_single_bet_amount'].astype(float) / 
+                    summary_data['default_up_point'].astype(float)
+                )
+                summary_data['profit_loss'] = summary_data['up_point'] - summary_data['final_balance']
+                summary_data['payout_rate'] = (summary_data['payout']).astype(float) / (summary_data['wager']).astype(float)
+                
+                # 计算bonus_profit_ratio
+                summary_data['bonus_profit_ratio'] = summary_data.apply(
+                    lambda x: x['bonus'] / summary_data.loc[
+                        max(0, x.name - 1), 'profit_loss'
+                    ] if x.name > 0 else 0, 
+                    axis=1
+                )
+                
+                # 将当前分组的汇总数据添加到列表中
+                all_summary_data.append(summary_data)
+                
+                # 保存原始数据
+                file_name = f'{game_type}_止盈{withdraw_rate}_返利比{cashback_rate}_充值挡{default_up_point}_单注挡{bet_amount}_{current_time}.csv'
+                file_path = os.path.join(csv_dir, file_name)
                 group_data.to_csv(
                     file_path,
                     index=False,
                     encoding='utf-8',
-                    float_format='%.2f'  # 保留2位小数
+                    float_format='%.3f'
                 )
-                logger.info(f"- 分组 {game_type}_{bet_amount}: {len(group_data)}条记录")
-                logger.info(f"  已保存到: {file_path}")
+                
+                logger.info(f"- 分组 {game_type}_止盈{withdraw_rate}_返利比{cashback_rate}_充值挡{default_up_point}_单注挡{bet_amount}_{current_time}: {len(group_data)}条记录")
+                logger.info(f"  原始数据已保存到: {file_path}")
             
+            # 合并所有汇总数据
+            final_summary = pd.concat(all_summary_data, ignore_index=True)
+            
+            # 替换无穷大和NaN值
+            final_summary = final_summary.replace([float('inf'), -float('inf')], 0)
+            final_summary = final_summary.fillna(0)
+            
+            # 按指定字段升序排序
+            final_summary = final_summary.sort_values(
+                by=['withdraw_rate','cashback_rate','game_type','group_id', 'bet_percent','date'],
+                ascending=[True,True,True,True, True, True]
+            )
+            
+            # 重新排列列顺序，将bet_percent放到第二列
+            columns = final_summary.columns.tolist()
+            columns.remove('bet_percent')  # 先移除bet_percent
+            columns.insert(3, 'bet_percent')  # 在第二个位置插入bet_percent
+            columns.remove('group_id')  # 先移除bet_percent
+            columns.insert(3, 'group_id')  # 在第二个位置插入bet_percent
+            final_summary = final_summary[columns]  # 重新排列列顺序
+            
+            # 保存合并后的汇总数据
+            summary_file_name = f'汇总结论_{current_time}.csv'
+            summary_file_path = os.path.join(csv_dir, summary_file_name)
+            final_summary.to_csv(
+                summary_file_path,
+                index=False,
+                encoding='utf-8',
+                float_format='%.3f'
+            )
+            
+            logger.info(f"汇总结论已保存到: {summary_file_path}")
             logger.info("============== 结果处理完成 ==============")
             
         except Exception as e:

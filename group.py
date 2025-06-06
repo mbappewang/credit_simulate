@@ -10,6 +10,7 @@ def create_group_master_sub_player_relation(task_list):
     masterid = 0
     subid = 0
     playerid = 0
+    group_id = 0
     for task in task_list:
         for group_id in range(task['group_count']):
             for master_id in range(task['matser_count']):
@@ -27,6 +28,8 @@ def create_group_master_sub_player_relation(task_list):
                         'withdraw_rate': task['withdraw_rate'],
                         'uper_identity': 'master',
                         'bonus': task['bonus'],
+                        'default_up_point': task['master_up_point'],
+                        'cashback_rate': task['cashback_rate'],
                     }
                     playerid += 1  # 确保player_id从1开始
                     relations.append(relation)
@@ -46,6 +49,8 @@ def create_group_master_sub_player_relation(task_list):
                             'withdraw_rate': task['withdraw_rate'],
                             'uper_identity': 'master',
                             'bonus': task['bonus'],
+                            'default_up_point': task['sub_up_point'],
+                            'cashback_rate': task['cashback_rate'],
                         }
                         playerid += 1  # 确保player_id从1开始
                         relations.append(relation)

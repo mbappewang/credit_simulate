@@ -118,6 +118,11 @@ def single_player(date,weekday,relation,odds_list):
                 # 用户余额增加
                 balance += single_payout
 
+    if balance > withdraw_balance:
+        balance = balance - relation['bonus']
+    else:
+        balance = 0
+
     result = {
         'date': date,
         'weekday': weekday,
@@ -136,6 +141,8 @@ def single_player(date,weekday,relation,odds_list):
         'payout': payout,
         "bonus": relation['bonus'],
         "withdraw_rate": relation['withdraw_rate'],
+        "default_up_point": relation['default_up_point'],
+        "cashback_rate": relation['cashback_rate'],
     }
     # logger.info(f"日期{date} {weekday}  玩法 {game_type} 组 {group_id} 总代 {master_id} 子代 {sub_id} 玩家 {player_id} ")
     return result  # 返回投注结果

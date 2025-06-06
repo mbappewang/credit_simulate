@@ -8,7 +8,7 @@ import time
 
 def multi_player(date, weekday, relations, odds_list):
     start_time = time.time()
-    pool_size = multiprocessing.cpu_count()
+    pool_size = multiprocessing.cpu_count()+2
     logger.info(f"创建进程池，大小: {pool_size}")
     
     with multiprocessing.Pool(processes=pool_size) as pool:
@@ -27,7 +27,7 @@ def multi_player(date, weekday, relations, odds_list):
         logger.info(f"{date} {weekday} - 所有玩家模拟完成:")
         logger.info(f"- 总玩家数: {total_players}")
         logger.info(f"- 总耗时: {execution_time:.2f} 秒")
-        logger.info(f"- 平均每个玩家耗时: {(execution_time/total_players):.3f} 秒")
+        # logger.info(f"- 平均每个玩家耗时: {(execution_time/total_players):.3f} 秒")
         logger.info(f"- 处理速度: {total_players/execution_time:.1f} 玩家/秒")
         logger.info("============== 任务执行结束 ==============")
     
