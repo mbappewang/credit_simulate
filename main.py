@@ -105,8 +105,9 @@ if __name__ == '__main__':
             
             # 定义数值类型列
             numeric_columns = [
-                'cashback_rate','group_id', 'player_id', 'uper_identity', 'master_id', 'sub_id',
-                'single_bet_amount','default_single_bet_amount', 'up_point','default_up_point', 'final_balance', 
+                'cashback_rate',
+                'single_bet_amount','default_single_bet_amount',
+                'up_point','default_up_point', 'final_balance', 
                 'wager','wager_valid', 'payout', 'bonus', 'withdraw_rate'
             ]
             
