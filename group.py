@@ -25,6 +25,7 @@ def create_group_master_sub_player_relation(task_list):
                         'single_bet': task['single_bet'],
                         'withdraw_rate': task['withdraw_rate'],
                         'uper_identity': 'master',
+                        'bonus': task['bonus'],
                     }
                     playerid += 1  # 确保player_id从1开始
                     relations.append(relation)
@@ -42,6 +43,7 @@ def create_group_master_sub_player_relation(task_list):
                             'single_bet': task['single_bet'],
                             'withdraw_rate': task['withdraw_rate'],
                             'uper_identity': 'master',
+                            'bonus': task['bonus'],
                         }
                         playerid += 1  # 确保player_id从1开始
                         relations.append(relation)

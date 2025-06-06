@@ -15,13 +15,13 @@ def generate_dates_with_weekdays(date_count=30):
         current_date = start_date + timedelta(days=i)
         # 获取星期几的中文名称
         weekday_cn = {
-            0: '星期一',
-            1: '星期二',
-            2: '星期三',
-            3: '星期四',
-            4: '星期五',
-            5: '星期六',
-            6: '星期日'
+            0: 'monday',
+            1: 'tuesday',
+            2: 'wednesday',
+            3: 'thursday',
+            4: 'friday',
+            5: 'saturday',
+            6: 'sunday'
         }[current_date.weekday()]
         
         # 格式化日期并添加星期

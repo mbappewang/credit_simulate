@@ -68,7 +68,7 @@ if __name__ == '__main__':
 
         ''' 第四步 - 生成日期列表 '''
         try:
-            dates_list = generate_dates_with_weekdays(2)
+            dates_list = generate_dates_with_weekdays(7)
             logger.info(f"成功生成{len(dates_list)}天的日期")
         except Exception as e:
             logger.error(f"生成日期列表失败: {str(e)}")
@@ -82,6 +82,8 @@ if __name__ == '__main__':
             for date_info in dates_list:
                 date = date_info['date']
                 weekday = date_info['weekday']
+                logger.info("=" * 50)
+                logger.warning(f"日期: {date}, 星期: {weekday} 的投注模拟开始")
                 result = multi_player(date, weekday, relations, odds_list)
                 results.extend(result)
                 logger.info(f"日期: {date}, 星期: {weekday} 的投注模拟完成")
@@ -96,9 +98,27 @@ if __name__ == '__main__':
         try:
             logger.info("============== 开始处理结果 ==============")
             
+            # 定义数值类型列
+            numeric_columns = [
+                'group_id', 'player_id', 'uper_identity', 'master_id', 'sub_id',
+                'single_bet_amount', 'up_point', 'final_balance', 'wager',
+                'wager_valid', 'payout', 'bonus', 'withdraw_rate'
+            ]
+            
             # 创建DataFrame
             df = pd.DataFrame(results)
-            logger.info(f"成功创建DataFrame, 共{len(df)}条记录")
+            
+            # 转换数值类型列
+            for col in numeric_columns:
+                if col in df.columns:
+                    # 保存原始数据的副本
+                    original_values = df[col].copy()
+                    # 尝试转换为数值
+                    df[col] = pd.to_numeric(df[col], errors='coerce')
+                    # 对于无法转换的位置，使用原始值
+                    df[col] = df[col].fillna(original_values)
+            
+            logger.info(f"成功创建DataFrame并转换数据类型, 共{len(df)}条记录")
             
             # 创建csv文件夹
             csv_dir = 'csv'
@@ -117,8 +137,13 @@ if __name__ == '__main__':
                 file_name = f'{game_type}_{bet_amount}_{current_time}.csv'
                 file_path = os.path.join(csv_dir, file_name)
                 
-                # 保存为CSV，使用utf-8编码
-                group_data.to_csv(file_path, index=False, encoding='utf-8')
+                # 保存为CSV时指定数值格式
+                group_data.to_csv(
+                    file_path,
+                    index=False,
+                    encoding='utf-8',
+                    float_format='%.2f'  # 保留2位小数
+                )
                 logger.info(f"- 分组 {game_type}_{bet_amount}: {len(group_data)}条记录")
                 logger.info(f"  已保存到: {file_path}")
             

@@ -20,7 +20,7 @@ def single_player(date,weekday,relation,odds_list):
     # 玩家所选玩法
     game_type = relation['game_type']
     # 玩家初始余额
-    initial_balance = relation['up_point']
+    initial_balance = relation['up_point'] + relation['bonus']
     # 单次投注金额
     default_single_bet_amount = relation['single_bet']
     single_bet_amount = relation['single_bet']
@@ -132,7 +132,8 @@ def single_player(date,weekday,relation,odds_list):
         'wager': wager,
         'wager_valid': wager_valid,
         'payout': payout,
-        "bonus": relation['bonus']
+        "bonus": relation['bonus'],
+        "withdraw_rate": relation['withdraw_rate'],
     }
     # logger.info(f"日期{date} {weekday}  玩法 {game_type} 组 {group_id} 总代 {master_id} 子代 {sub_id} 玩家 {player_id} ")
     return result  # 返回投注结果
