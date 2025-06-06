@@ -79,15 +79,20 @@ if __name__ == '__main__':
         ''' 第五步 - 多玩家投注 '''
         results = []
         try:
-            for date_info in dates_list:
+            for i, date_info in enumerate(dates_list):
                 date = date_info['date']
                 weekday = date_info['weekday']
                 logger.info("=" * 50)
                 logger.warning(f"日期: {date}, 星期: {weekday} 的投注模拟开始")
-                result = multi_player(date, weekday, relations, odds_list)
+                
+                # 第一天使用初始relations，之后使用new_relations
+                current_relations = relations if i == 0 else new_relations
+                
+                result = multi_player(date, weekday, current_relations, odds_list)
                 results.extend(result)
                 logger.info(f"日期: {date}, 星期: {weekday} 的投注模拟完成")
                 new_relations = change_task(result)
+                
         except Exception as e:
             logger.error(f"玩家投注模拟失败: {str(e)}")
             raise
