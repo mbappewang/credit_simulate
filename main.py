@@ -218,7 +218,7 @@ if __name__ == '__main__':
                 summary_file_path,
                 index=False,
                 encoding='utf-8',
-                float_format='%.3f'
+                float_format='%.4f'
             )
             
             logger.info(f"汇总结论已保存到: {summary_file_path}")
