@@ -58,10 +58,10 @@ def change_task(result):
                 'master_id': item['master_id'],
                 'sub_id': item.get('sub_id', None),
                 'player_id': item['player_id'],
-                'up_point': item['default_up_point'],
+                'up_point': item['default_up_point'],  # 如果玩家赢了,恢复默认充值金额
                 'default_up_point': item['default_up_point'],
                 'game_type': item['game_type'],
-                'single_bet': item['default_single_bet_amount'],
+                'single_bet': item['default_single_bet_amount'], # 如果玩家赢了,恢复默认单注
                 'withdraw_rate': item['withdraw_rate'],
                 'uper_identity': item['uper_identity'],
                 'bonus': 0,

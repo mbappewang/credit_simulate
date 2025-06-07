@@ -26,7 +26,7 @@ def single_player(date,weekday,relation,odds_list):
     current_single_bet_amount = relation['single_bet']
     single_bet_amount = relation['single_bet']
     # 止盈目标余额
-    withdraw_balance = relation['withdraw_rate']* initial_balance
+    withdraw_balance = relation['withdraw_rate'] * relation['up_point'] + relation['bonus']
     
     # 总投注金额
     wager = 0
@@ -36,6 +36,8 @@ def single_player(date,weekday,relation,odds_list):
     payout = 0
     # 玩家当前余额
     balance = initial_balance
+    # 投注次数
+    bet_times = 0
 
     # 模拟投注结果
     match game_type:
@@ -96,8 +98,8 @@ def single_player(date,weekday,relation,odds_list):
                 # 用户余额增加
                 balance += single_payout
         case 'baccarat':
-            # 当用户余额大于0，且（未达到止盈金额或未完成有效流水）时，继续投注
-            while balance > 0 and (balance < withdraw_balance or wager < initial_balance):
+            # 当用户余额大于0，且（未达到止盈金额或未完成有效流水）且 投注次数小于 250 次 时，继续投注
+            while balance > 0 and (balance < withdraw_balance or wager < initial_balance) and bet_times <= 100:
                 # 余额不足降低投注额
                 if balance < single_bet_amount:
                     single_bet_amount = balance * 0.1
@@ -123,9 +125,13 @@ def single_player(date,weekday,relation,odds_list):
                 payout += single_payout
                 # 用户余额增加
                 balance += single_payout
+                # 投注次数增加
+                bet_times += 1
 
-    if balance > withdraw_balance:
+    if wager <= relation['up_point'] * 2 + relation['bonus'] * 20:
         balance = balance - relation['bonus']
+    if balance < 0:
+        balance = 0
 
     result = {
         'date': date,

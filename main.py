@@ -12,7 +12,8 @@ from second_day_change import change_task
 # 模拟任务
 if __name__ == '__main__':
     
-    logger.info(r"""
+    logger.info(
+        r"""
                    _ooOoo_
                   o8888888o
                   88" . "88
@@ -68,7 +69,7 @@ if __name__ == '__main__':
 
         ''' 第四步 - 生成日期列表 '''
         try:
-            dates_list = generate_dates_with_weekdays(30) # 生成N天的日期列表
+            dates_list = generate_dates_with_weekdays(365) # 生成N天的日期列表
             logger.info(f"成功生成{len(dates_list)}天的日期")
         except Exception as e:
             logger.error(f"生成日期列表失败: {str(e)}")
@@ -145,8 +146,6 @@ if __name__ == '__main__':
                 # 按日期和master_id分组并计算汇总数据
                 summary_data = group_data.groupby(['withdraw_rate','cashback_rate','game_type','date','group_id']).agg({
                     'player_id': 'count',
-                    'default_up_point': 'first',
-                    'default_single_bet_amount': 'first',
                     'up_point': 'sum',
                     'final_balance': 'sum',
                     'wager': 'sum',
@@ -164,32 +163,39 @@ if __name__ == '__main__':
                     summary_data['default_single_bet_amount'].astype(float) / 
                     summary_data['default_up_point'].astype(float)
                 )
-                summary_data['profit_loss'] = summary_data['up_point'] - summary_data['final_balance']
-                summary_data['payout_rate'] = (summary_data['payout']).astype(float) / (summary_data['wager']).astype(float)
+                summary_data['profit_loss'] = summary_data['up_point'].astype(float) - summary_data['final_balance'].astype(float)
+                summary_data['RTP'] = (summary_data['payout']).astype(float) / (summary_data['wager']).astype(float)
+                summary_data['流水倍数'] = summary_data['wager'].astype(float) / (summary_data['up_point'].astype(float) + summary_data['bonus'].astype(float))
+                summary_data['分成前充提比'] = summary_data['final_balance'].astype(float) / summary_data['up_point'].astype(float)
+                summary_data['毛利率'] = 1 - summary_data['分成前充提比'].astype(float)
+                summary_data['provider_share'] = (summary_data['wager'].astype(float) - summary_data['payout'].astype(float)).astype(float) * 0.1
+                summary_data['供应商分成'] = summary_data['provider_share'].astype(float) / summary_data['up_point'].astype(float)
+                summary_data['net_profit'] = summary_data['profit_loss'].astype(float) - summary_data['provider_share'].astype(float)
+                summary_data['净利'] = summary_data['net_profit'].astype(float) / summary_data['up_point'].astype(float)
                 
                 # 计算bonus_profit_ratio
-                summary_data['bonus_profit_ratio'] = summary_data.apply(
-                    lambda x: x['bonus'] / summary_data.loc[
-                        max(0, x.name - 1), 'profit_loss'
-                    ] if x.name > 0 else 0, 
-                    axis=1
-                )
+                # summary_data['bonus_profit_ratio'] = summary_data.apply(
+                #     lambda x: x['bonus'] / summary_data.loc[
+                #         max(0, x.name - 1), 'profit_loss'
+                #     ] if x.name > 0 else 0, 
+                #     axis=1
+                # )
                 
                 # 将当前分组的汇总数据添加到列表中
                 all_summary_data.append(summary_data)
                 
                 # 保存原始数据
-                file_name = f'{game_type}_止盈{withdraw_rate}_返利比{cashback_rate}_充值挡{default_up_point}_单注挡{bet_amount}_{current_time}.csv'
-                file_path = os.path.join(csv_dir, file_name)
-                group_data.to_csv(
-                    file_path,
-                    index=False,
-                    encoding='utf-8',
-                    float_format='%.3f'
-                )
+                # file_name = f'{game_type}_止盈{withdraw_rate}_返利比{cashback_rate}_充值挡{default_up_point}_单注挡{bet_amount}_{current_time}.csv'
+                # file_path = os.path.join(csv_dir, file_name)
+                # group_data.to_csv(
+                #     file_path,
+                #     index=False,
+                #     encoding='utf-8',
+                #     float_format='%.3f'
+                # )
                 
-                logger.info(f"- 分组 {game_type}_止盈{withdraw_rate}_返利比{cashback_rate}_充值挡{default_up_point}_单注挡{bet_amount}_{current_time}: {len(group_data)}条记录")
-                logger.info(f"  原始数据已保存到: {file_path}")
+                # logger.info(f"- 分组 {game_type}_止盈{withdraw_rate}_返利比{cashback_rate}_充值挡{default_up_point}_单注挡{bet_amount}_{current_time}: {len(group_data)}条记录")
+                # logger.info(f"  原始数据已保存到: {file_path}")
             
             # 合并所有汇总数据
             final_summary = pd.concat(all_summary_data, ignore_index=True)
