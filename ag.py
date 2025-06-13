@@ -1,6 +1,6 @@
 import numpy as np
 from typing import List, Tuple, Dict
-
+# https://gci.wintokens.io/pc/rules/new/zh/b1.jsp?stamp=250613_2.41.9_1&bid=true&bac_db=true&bac_pairs=true&bac_superSix=true&nn=true&bj=true&zjh=true&sg=true&dtsuper=true&bid=true&bac_db=true&bac_pairs=true&bac_superSix=true&bac_in=false&ft=0&ulpk=0&nn=true&bj=true&vip=false&comp=0&goodRoad=false&zjh=true&bf=false&ebac=false&sg=true&superDt=true&bacjp=false
 class Baccarat:
     def __init__(self):
         # 使用 numpy 创建牌组
